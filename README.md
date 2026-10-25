@@ -1,0 +1,69 @@
+# Welcome to Template &middot; [![GitHub license](https://img.shields.io/github/license/lengors-labs/template?color=blue)](https://github.com/lengors-labs/template/blob/main/LICENSE)
+
+Welcome to **template**, the generic, language-agnostic starting point for new
+repositories in the [`lengors-labs`](https://github.com/lengors-labs) organization.
+
+This template is deliberately minimal. Most of the organization's conventions are
+maintained once in [`lengors-labs/.github`](https://github.com/lengors-labs/.github)
+and inherited automatically by every repository that does not override them. What
+remains here is the content that **cannot** be inherited, plus the files that make
+this repository usable as a template.
+
+## What's in here
+
+- `README.md` — this file: the project's introduction and usage notes.
+- `LICENSE` — [The Unlicense](./LICENSE), placing the project in the public domain.
+- `AGENTS.md` — project instructions for AI agents: commit conventions, pull
+  request conventions, issue and pull request linking policy, and Git/GitHub
+  safety rules.
+- `.github/CODEOWNERS` — default code owners for the repository.
+
+## What's inherited
+
+These files live in [`lengors-labs/.github`](https://github.com/lengors-labs/.github)
+and apply to this repository without being duplicated here:
+
+- `CODE_OF_CONDUCT.md` — our code of conduct.
+- `CONTRIBUTING.md` — contribution guidelines.
+- `SECURITY.md` — security policy.
+- `SUPPORT.md` — support resources.
+- `.github/FUNDING.yml` — sponsorship configuration.
+- `.github/ISSUE_TEMPLATE/` — issue forms and issue configuration.
+- `.github/PULL_REQUEST_TEMPLATE.md` — default pull request template.
+
+Do not copy them into this repository: an override would silently freeze that file
+at the version it was taken from, and future organization-wide updates would no
+longer reach generated projects.
+
+## Getting started
+
+1. Click **Use this template** at the top of this repository, or open
+   <https://github.com/lengors-labs/template/generate>.
+2. Choose the owner and name of the new repository.
+3. Replace the contents of this `README.md` with a description of your project.
+4. Adjust `.github/CODEOWNERS` if the maintainers differ from the defaults.
+5. Update the **Project** section of `AGENTS.md` with the description, package
+   manager, and any globally relevant scripts of the new project.
+
+Do not fork or clone this repository as a starting point, and do not branch from
+`main` to begin a project. Using it as a template produces a new repository with a
+fresh history, which is what you want; a fork keeps a dependency on this repository
+that is never useful.
+
+## What's next
+
+This repository intentionally ships without a versioning and release pipeline. The
+release setup (semantic-release, gitmoji-driven versioning, changelog generation) is
+tracked separately and is expected to be layered on top of the generated project
+rather than baked into this baseline.
+
+## Contributing
+
+Contributions are welcome! Please refer to our [Contribution Guidelines](https://github.com/lengors-labs/.github/blob/main/CONTRIBUTING.md)
+for more information on how to get involved, including the commit and pull request
+conventions enforced by this repository (also documented in [`AGENTS.md`](./AGENTS.md)).
+
+## License
+
+This project is licensed under [The Unlicense](./LICENSE), which places it in the
+public domain.
