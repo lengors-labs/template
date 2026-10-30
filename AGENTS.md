@@ -4,12 +4,15 @@
 
 Generic, language-agnostic starting point for new repositories in the `lengors-labs`
 organization: it carries the repository-level content that cannot be inherited from
-`lengors-labs/.github` — code owners, license, README and these instructions — and is
-consumed through GitHub's "Use this template" feature rather than by branching.
+`lengors-labs/.github` — code owners, license, README, these instructions and the
+release pipeline — and is consumed through GitHub's "Use this template" feature
+rather than by branching.
 
-No package manager, build system or test suite; changes are plain Markdown and YAML.
-Verify a change by reviewing the rendered Markdown and, when references are touched,
-by following the linked paths in the `lengors-labs` organization.
+No package manager or build system. Changes are Markdown, YAML and one JavaScript
+configuration file for semantic-release; there is no test suite. Verify a change by
+reviewing the rendered Markdown, parsing the YAML and JavaScript for syntax errors,
+and, when references are touched, by following the linked paths in the
+`lengors-labs` organization.
 
 Note: every generated repository starts from this content, so treat edits here as
 changes to the baseline of all future projects. Keep files generic — nothing specific
@@ -68,6 +71,24 @@ Rules of thumb:
 - When in doubt between two emojis, prefer the one describing *what changed*, not why.
 
 **Grouping:** one logically coherent concern per commit — if a single issue or request spans multiple features/fixes/chores, make one commit per unit. Tests go in their own ✅ commit (separate from the implementation they cover). If you find yourself wanting two different gitmoji for one change, split it into separate commits.
+
+The table above is the contract: `.releaserc.js` carries its machine-readable form
+and derives the version bump and the changelog section from it. Editing one without
+the other silently changes what a commit means, so treat them as a single change.
+
+## Release conventions
+
+The branch model and the numbering behaviour are documented in
+[`docs/release.md`](./docs/release.md). In short:
+
+- `main` is the default branch and contains **released code only**; `rc` is the
+  long-lived integration branch and every topic branch is cut from it.
+- Pushes to either branch run semantic-release. `rc` produces `x.y.z-rc.n`
+  prereleases, `main` produces the final version.
+- Versions live in git tags (`v1.2.0`); no version is written into a file, so there
+  is no version file to bump, commit or keep in sync.
+
+Do not hand-edit versions, changelogs or tags: the pipeline owns them.
 
 ## Pull request conventions
 
