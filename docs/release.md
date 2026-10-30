@@ -112,20 +112,19 @@ enters the picture, and they enter through a single hook: a `prepare` step that
 writes the computed version into whatever file the tool reads.
 
 ```js
-// .releaserc.js in a language template
-module.exports = {
-  ...require('./path/to/base-config'), // or copy the base config and extend it
-  plugins: [
-    // ... the base plugins ...
-    ['@semantic-release/exec', {
-      prepareCmd: './mvnw versions:set -DnewVersion=${nextRelease.version}',
-    }],
-    ['@semantic-release/git', {
-      assets: ['pom.xml', 'CHANGELOG.md'],
-      message: '🔖 Update `pom.xml` to `${nextRelease.version}` [skip release]',
-    }],
-  ],
-}
+// .releaserc.js in a language template: copy this repository's config and add
+// the two build-tool-specific plugins at the end.
+plugins: [
+  // ... the base inline plugin and @semantic-release/github ...
+
+  ['@semantic-release/exec', {
+    prepareCmd: './mvnw versions:set -DnewVersion=${nextRelease.version}',
+  }],
+  ['@semantic-release/git', {
+    assets: ['pom.xml'],
+    message: '🔖 Update `pom.xml` to `${nextRelease.version}` [skip release]',
+  }],
+],
 ```
 
 Three rules apply:
@@ -140,10 +139,11 @@ Three rules apply:
    final one.
 
 Because the bump commit is created by `@semantic-release/git` on whichever
-branch triggered the run, a template that adds it must choose strategy **B** (or
-commit on `main` only) — strategy A reintroduces the conflicts described above.
-This is why the generic layer deliberately omits the plugin instead of shipping
-it disabled.
+branch triggered the run, adding it to a template reintroduces strategy **A** and
+the conflicts described above. A template that must keep a version in a file
+should restrict that commit to `main` (strategy **B**) with a dynamic config
+instead — which is why the generic layer omits the plugin rather than shipping it
+disabled: there is no correct default that works on both branches.
 
 ## Verification
 
