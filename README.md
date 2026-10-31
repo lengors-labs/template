@@ -16,6 +16,9 @@ this repository usable as a template.
 - `AGENTS.md` — project instructions for AI agents: commit conventions, pull
   request conventions, issue and pull request linking policy, and Git/GitHub
   safety rules.
+- `.releaserc.js` — the release pipeline: gitmoji commits become versions,
+  changelogs and GitHub releases.
+- `.github/workflows/publish-new-version.yml` — GitHub Actions workflow that runs it.
 - `.github/CODEOWNERS` — default code owners for the repository.
 
 ## What's inherited
@@ -42,7 +45,10 @@ longer reach generated projects.
 2. Choose the owner and name of the new repository.
 3. Replace the contents of this `README.md` with a description of your project.
 4. Adjust `.github/CODEOWNERS` if the maintainers differ from the defaults.
-5. Update the **Project** section of `AGENTS.md` with the description, package
+5. Add the secrets the release workflow needs to the `publisher` environment:
+   `GH_APP_ID` and `GH_PRIVATE_KEY` for the GitHub App that performs the release.
+   The workflow signs nothing, so no GPG key is required.
+6. Update the **Project** section of `AGENTS.md` with the description, package
    manager, and any globally relevant scripts of the new project.
 
 Do not fork or clone this repository as a starting point, and do not branch from
@@ -50,12 +56,25 @@ Do not fork or clone this repository as a starting point, and do not branch from
 fresh history, which is what you want; a fork keeps a dependency on this repository
 that is never useful.
 
-## What's next
+## Releasing
 
-This repository intentionally ships without a versioning and release pipeline. The
-release setup (semantic-release, gitmoji-driven versioning, changelog generation) is
-tracked separately and is expected to be layered on top of the generated project
-rather than baked into this baseline.
+Every project generated from this template starts with a working release pipeline.
+There are two permanent branches, and two ways to release:
+
+| Branch | Role | Version produced | How |
+| :--- | :--- | :--- | :--- |
+| `main` | Default. Contains released code only. | `1.2.0` | push |
+| `rc` | Integration branch. Work merges here first. | `1.2.0-rc.1` | push |
+| `feat/**`, `bug/**`, `chore/**` | Topic branches, cut from `rc`. | `1.2.0-preview-<branch>.1` | manual dispatch |
+
+Topic branches are cut from `rc`; promoting `rc` into `main` produces the final
+release. Pushing to a topic branch does nothing — its preview is published on demand
+from the Actions tab, which is useful for trying a build without cutting an `rc`.
+
+The bump is derived from the commit's gitmoji, the changelog and GitHub release are
+generated from the same commits, and the version lives in the git tag — nothing is
+written into a file. See the comment block at the end of [`.releaserc.js`](./.releaserc.js)
+for how a language template adds its own build tool to the pipeline.
 
 ## Contributing
 
