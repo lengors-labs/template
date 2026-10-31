@@ -13,9 +13,12 @@ this repository usable as a template.
 
 - `README.md` — this file: the project's introduction and usage notes.
 - `LICENSE` — [The Unlicense](./LICENSE), placing the project in the public domain.
-- `AGENTS.md` — project instructions for AI agents: commit conventions, pull
-  request conventions, issue and pull request linking policy, and Git/GitHub
-  safety rules.
+- `AGENTS.md` — project instructions for AI agents: commit conventions, release
+  conventions, pull request conventions, issue and pull request linking policy, and
+  Git/GitHub safety rules.
+- `.releaserc.js` — the semantic-release configuration: gitmoji commits become
+  versions, changelogs and GitHub releases.
+- `.github/workflows/publish-new-version.yml` — the workflow that runs it.
 - `.github/CODEOWNERS` — default code owners for the repository.
 
 ## What's inherited
@@ -42,7 +45,10 @@ longer reach generated projects.
 2. Choose the owner and name of the new repository.
 3. Replace the contents of this `README.md` with a description of your project.
 4. Adjust `.github/CODEOWNERS` if the maintainers differ from the defaults.
-5. Update the **Project** section of `AGENTS.md` with the description, package
+5. Add the secrets the release workflow needs to the `publisher` environment —
+   `GH_APP_ID`, `GH_PRIVATE_KEY`, `GPG_PRIVATE_KEY` and `GPG_PASSPHRASE`. Without
+   them the workflow fails on the first push to `rc`.
+6. Update the **Project** section of `AGENTS.md` with the description, package
    manager, and any globally relevant scripts of the new project.
 
 Do not fork or clone this repository as a starting point, and do not branch from
@@ -50,12 +56,15 @@ Do not fork or clone this repository as a starting point, and do not branch from
 fresh history, which is what you want; a fork keeps a dependency on this repository
 that is never useful.
 
-## What's next
+## Releasing
 
-This repository intentionally ships without a versioning and release pipeline. The
-release setup (semantic-release, gitmoji-driven versioning, changelog generation) is
-tracked separately and is expected to be layered on top of the generated project
-rather than baked into this baseline.
+Every project generated from this template starts with a working release pipeline:
+gitmoji commits on `rc` produce `x.y.z-rc.n` prereleases, and promoting `rc` into
+`main` produces the final release. Versions live in git tags, changelogs and GitHub
+releases — nothing is written into a file.
+
+The branch model and the extension point for build tools are documented under
+[Release conventions](./AGENTS.md#release-conventions).
 
 ## Contributing
 
