@@ -9,7 +9,8 @@ pipeline — and is consumed through GitHub's "Use this template" feature rather
 by branching.
 
 No package manager or build system. Changes are Markdown, YAML and one JavaScript
-configuration file for semantic-release; there is no test suite. Verify a change by
+configuration file for semantic-release. Run the dependency-free workflow regression
+tests with `bash .github/tests/test-remove-checkout-token.sh`. Also verify changes by
 reviewing the rendered Markdown and by parsing the YAML and JavaScript for syntax
 errors (`node --check .releaserc.js`), and, when references are touched, by following
 the linked paths in the `lengors-labs` organization.
