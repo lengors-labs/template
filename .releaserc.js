@@ -108,7 +108,7 @@ module.exports = {
 
     // Publishes the GitHub release and pushes the tags. The notes generated
     // above become the release body, which is why no `CHANGELOG.md` is written:
-    // without `@semantic-release/git` the file would be discarded with the
+    // without a release-commit plugin the file would be discarded with the
     // runner, and the release body already carries the same content.
     '@semantic-release/github',
 
@@ -117,20 +117,24 @@ module.exports = {
     // ---------------------------------------------------------------------
     //
     // This generic layer stops at the tag. A template that has a build tool
-    // adds two plugins *after* the ones above, in this order:
+    // adds these plugins before `@semantic-release/github`, in this order:
     //
     //   ['@semantic-release/exec', {
     //     prepareCmd: './mvnw versions:set -DnewVersion=${nextRelease.version}',
     //   }],
-    //   ['@semantic-release/git', {
-    //     assets: ['pom.xml'],
-    //     message: '🔖 Update `pom.xml` to `${nextRelease.version}` [skip release]',
+    //   ['@jno21/semantic-release-github-commit', {
+    //     files: ['pom.xml'],
+    //     commitMessage: '🔖 Update `pom.xml` to `${nextRelease.version}` [skip ci]',
     //   }],
     //
     // `${nextRelease.version}` is already fully resolved, prerelease suffix
     // included, so `1.2.0-rc.1` needs no special handling.
     //
-    // `@semantic-release/git` must stay last: it commits whatever the preceding
-    // `prepare` steps wrote, so its asset list is the final one.
+    // Install `@semantic-release/exec` through the workflow's `extra_plugins`;
+    // the API-side commit plugin is already installed at an exact version.
+    // It commits the preceding `prepare` steps' files and moves local HEAD so
+    // the release tag includes the bump. Do not use `@semantic-release/git`:
+    // local commits cannot obtain GitHub's API-side signature. Never pass an
+    // author or committer (including GIT_AUTHOR_* / GIT_COMMITTER_* overrides).
   ],
 }

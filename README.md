@@ -47,7 +47,10 @@ longer reach generated projects.
 4. Adjust `.github/CODEOWNERS` if the maintainers differ from the defaults.
 5. Add the secrets the release workflow needs to the `publisher` environment:
    `GH_APP_ID` and `GH_PRIVATE_KEY` for the GitHub App that performs the release.
-   The workflow signs nothing, so no GPG key is required.
+   Install the App on the repository with **Contents: write**. **Workflows: write**
+   is required only if a release commit includes `.github/workflows/**`.
+   No GPG key is required: tags are unsigned, and optional release commits are
+   signed by GitHub through its API.
 6. Update the **Project** section of `AGENTS.md` with the description, package
    manager, and any globally relevant scripts of the new project.
 
@@ -75,6 +78,28 @@ The bump is derived from the commit's gitmoji, the changelog and GitHub release 
 generated from the same commits, and the version lives in the git tag — nothing is
 written into a file. See the comment block at the end of [`.releaserc.js`](./.releaserc.js)
 for how a language template adds its own build tool to the pipeline.
+
+### Optional verified release commits
+
+Language templates that write a version file use `@semantic-release/exec` to bump
+it, then `@jno21/semantic-release-github-commit` to commit it through GitHub's API.
+Do not pass an author or committer: even the App's own explicit identity prevents
+GitHub from signing the commit. The workflow intentionally sets no `GIT_AUTHOR_*`
+or `GIT_COMMITTER_*` overrides and makes no separate bot-identity lookup.
+
+The workflow pins the commit plugin to **1.0.1** rather than vendoring it: this
+reuses the existing implementation without maintaining a local fork. Review the
+plugin and its credential handling before every version change; pinning does not
+freeze its transitive dependencies. The generic template installs it but does not
+enable it in `.releaserc.js`, so releases here remain tag-only.
+
+Version 1.0.1 leaves its authenticated origin URL in Git configuration and
+`FETCH_HEAD`. `persist-credentials: false` alone does not prevent this. An
+always-run workflow step removes the App token from both files and fails on a
+cleanup error or any remaining occurrence, including after a failed release.
+Do not cache the checkout or upload its Git metadata before that step runs.
+As with any workflow cleanup, forcibly terminating the runner can prevent it
+from running; do not reuse an interrupted workspace without cleaning it first.
 
 ## Contributing
 
